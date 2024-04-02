@@ -1,4 +1,6 @@
 
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 public class Character : MonoBehaviour
@@ -6,13 +8,24 @@ public class Character : MonoBehaviour
     public float health;
     public float damage;
     public float speed;
-    public Rigidbody2D rigidBody;
+    public float bulletSpeed;
+    public GameObject bulletPrefab;
+    protected Rigidbody2D rbBody;
+    protected Transform gunTransform;
     protected Vector3 rotationVector;
-    private float rotationZ;
+    protected float rotationZ;
+    protected float currentHealth;
+
 
     protected virtual void Awake()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
+        rbBody = GetComponent<Rigidbody2D>();
+        gunTransform = transform.Find("Gun");
+    }
+
+    protected virtual void Start()
+    {
+        StartCoroutine(ShootTarget());
 
     }
 
@@ -22,11 +35,13 @@ public class Character : MonoBehaviour
 
     }
 
-    public void SetInitialStats(float health, float damage, float speed)
+    public void SetInitialStats(float health, float damage, float speed, float bulletSpeed)
     {
         this.health = health;
         this.damage = damage;
         this.speed = speed;
+        this.bulletSpeed = bulletSpeed;
+        this.currentHealth = this.health;
     }
     public void RotateToTarget(Vector3 target)
     {
@@ -37,11 +52,21 @@ public class Character : MonoBehaviour
 
     public void MoveInDirection(Vector2 direction)
     {
-        rigidBody.MovePosition((Vector2)transform.position + (direction * speed * Time.deltaTime));
+        rbBody.MovePosition((Vector2)transform.position + (direction * speed * Time.deltaTime));
+    }
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        print(gameObject.tag + " :" + currentHealth);
     }
 
-    public void Shoot()
+    public IEnumerator ShootTarget()
     {
+        yield return new WaitForSeconds(1.0f);
+        GameObject bullet = Instantiate(bulletPrefab, gunTransform.position, gunTransform.rotation);
+        bullet.GetComponent<Bullet>().damage = damage;
+        bullet.GetComponent<Rigidbody2D>().AddForce(gunTransform.up * bulletSpeed, ForceMode2D.Impulse);
+        StartCoroutine(ShootTarget());
 
     }
 
