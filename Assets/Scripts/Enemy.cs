@@ -25,6 +25,7 @@ public class Enemy : Character
 
     void FixedUpdate()
     {
+        rotationVector.Normalize();
         RotateToTarget(playerTransform.position);
         if (Vector2.Distance(transform.position, playerTransform.position) > 2)
         {

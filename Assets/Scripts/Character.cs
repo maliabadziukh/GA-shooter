@@ -35,7 +35,6 @@ public class Character : MonoBehaviour
 
     protected virtual void Update()
     {
-        rotationVector.Normalize();
         if (currentHealth <= 0)
         {
             Die();
@@ -45,12 +44,25 @@ public class Character : MonoBehaviour
 
     public void SetInitialStats(List<float> stats)
     {
-        this.health = stats[0] * 1000;
-        this.damage = stats[1] * 100;
-        this.speed = stats[2] * 3;
-        this.bulletSpeed = stats[3] * 10;
-        this.reloadTime = (1 - stats[4]) * 5;
-        this.currentHealth = this.health;
+        if (gameObject.CompareTag("Enemy"))
+        {
+            this.health = stats[0] * 250;
+            this.damage = stats[1] * 50;
+            this.speed = (float)(stats[2] * 1.5);
+            this.bulletSpeed = stats[3] * 5;
+            this.reloadTime = (float)((1 - stats[4]) * 2.5);
+            this.currentHealth = this.health;
+        }
+        else
+        {
+            this.health = stats[0] * 500;
+            this.damage = stats[1] * 100;
+            this.speed = stats[2] * 3;
+            this.bulletSpeed = stats[3] * 10;
+            this.reloadTime = (1 - stats[4]) * 5;
+            this.currentHealth = this.health;
+        }
+
     }
     public void RotateToTarget(Vector3 target)
     {

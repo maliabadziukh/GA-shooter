@@ -27,7 +27,6 @@ public class GameController : MonoBehaviour
     {
         if (spawnTimer <= 0)
         {
-            //spawn an enemy
             if (enemiesToSpawn.Count > 0)
             {
                 GameObject enemy = Instantiate(enemyPrefab, spawnLocation.position, Quaternion.identity);

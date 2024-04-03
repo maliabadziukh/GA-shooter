@@ -28,6 +28,7 @@ public class Player : Character
 
     void FixedUpdate()
     {
+        moveInput.Normalize();
         MoveInDirection(moveInput);
         RotateToTarget(GetMousePos());
     }
