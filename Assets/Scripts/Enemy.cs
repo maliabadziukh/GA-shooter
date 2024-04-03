@@ -26,7 +26,7 @@ public class Enemy : Character
     void FixedUpdate()
     {
         RotateToTarget(playerTransform.position);
-        if (Vector2.Distance(transform.position, playerTransform.position) > 1)
+        if (Vector2.Distance(transform.position, playerTransform.position) > 2)
         {
             MoveInDirection(rotationVector);
         }
