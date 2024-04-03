@@ -1,5 +1,6 @@
 
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -35,12 +36,12 @@ public class Character : MonoBehaviour
 
     }
 
-    public void SetInitialStats(float health, float damage, float speed, float bulletSpeed)
+    public void SetInitialStats(List<float> stats)
     {
-        this.health = health;
-        this.damage = damage;
-        this.speed = speed;
-        this.bulletSpeed = bulletSpeed;
+        this.health = stats[0];
+        this.damage = stats[1];
+        this.speed = stats[2];
+        this.bulletSpeed = stats[3];
         this.currentHealth = this.health;
     }
     public void RotateToTarget(Vector3 target)
