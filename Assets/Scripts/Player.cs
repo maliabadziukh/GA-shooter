@@ -13,26 +13,30 @@ public class Player : Character
         base.Awake();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
+    protected override void Start()
+    {
+        base.Start();
+    }
 
     protected override void Update()
     {
-        base.Update();
+
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        moveInput.Normalize();
+        base.Update();
+
     }
 
     void FixedUpdate()
     {
         MoveInDirection(moveInput);
-        print("player moved");
         RotateToTarget(GetMousePos());
     }
-
-
 
     Vector3 GetMousePos()
     {
         target = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         return target;
     }
+
+
 }

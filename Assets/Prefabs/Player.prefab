@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 2025571663417703588}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,7 +112,7 @@ Transform:
   m_GameObject: {fileID: 7697479598873518444}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.9}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -197,7 +197,8 @@ MonoBehaviour:
   health: 0
   damage: 0
   speed: 0
-  rigidBody: {fileID: 0}
+  bulletSpeed: 0
+  bulletPrefab: {fileID: 3695268720672303636, guid: 71d28cd2d9ece41ce81f41c46b59db5d, type: 3}
 --- !u!1 &8897698348170294535
 GameObject:
   m_ObjectHideFlags: 0
