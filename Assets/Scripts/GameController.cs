@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour
 {
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
+
     public Transform spawnLocation;
     public int numberOfEnemies = 5;
     public int waveDuration = 100;
@@ -22,6 +23,7 @@ public class GameController : MonoBehaviour
         GameObject playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         Player player = playerObj.GetComponent<Player>();
         player.SetInitialStats(NormalizeStats(new() { 100, 100, 100, 100, 100 }));
+
     }
     void FixedUpdate()
     {

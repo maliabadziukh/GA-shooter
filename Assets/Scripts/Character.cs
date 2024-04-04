@@ -12,19 +12,21 @@ public class Character : MonoBehaviour
     public float bulletSpeed;
     public float reloadTime;
     public GameObject bulletPrefab;
+    protected GameObject tank;
     protected Rigidbody2D rbBody;
     protected Transform gunTransform;
     protected Vector3 rotationVector;
     protected float rotationZ;
-    protected float currentHealth;
+    public float currentHealth;
     protected float initializationTime;
     protected float timeSurvived;
 
 
     protected virtual void Awake()
     {
+        tank = transform.Find("Tank").gameObject;
         rbBody = GetComponent<Rigidbody2D>();
-        gunTransform = transform.Find("Gun");
+        gunTransform = tank.transform.Find("Gun");
     }
 
     protected virtual void Start()
@@ -68,7 +70,7 @@ public class Character : MonoBehaviour
     {
         rotationVector = target - transform.position;
         rotationZ = Mathf.Atan2(rotationVector.y, rotationVector.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, rotationZ - 90);
+        tank.transform.rotation = Quaternion.Euler(0, 0, rotationZ - 90);
     }
 
     public void MoveInDirection(Vector2 direction)
@@ -78,7 +80,6 @@ public class Character : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        print(gameObject.tag + " :" + currentHealth);
     }
 
     public IEnumerator ShootTarget()
