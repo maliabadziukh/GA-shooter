@@ -20,6 +20,8 @@ public class Character : MonoBehaviour
     public float currentHealth;
     protected float initializationTime;
     protected float timeSurvived;
+    public List<float> DNA = new();
+
 
 
     protected virtual void Awake()
@@ -35,19 +37,13 @@ public class Character : MonoBehaviour
         initializationTime = Time.timeSinceLevelLoad;
     }
 
-    protected virtual void Update()
-    {
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-
-    }
 
     public void SetInitialStats(List<float> stats)
     {
         if (gameObject.CompareTag("Enemy"))
         {
+            this.DNA = stats;
+
             this.health = stats[0] * 250;
             this.damage = stats[1] * 50;
             this.speed = (float)(stats[2] * 1.5);
@@ -92,11 +88,5 @@ public class Character : MonoBehaviour
 
     }
 
-    public void Die()
-    {
-        GameObject.Find("GameController").GetComponent<GameController>().spawnedEnemies.Remove(gameObject);
-        timeSurvived = Time.timeSinceLevelLoad - initializationTime;
-        print("I survived for: " + timeSurvived);
-        Destroy(gameObject);
-    }
+
 }

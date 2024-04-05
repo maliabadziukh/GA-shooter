@@ -3159,6 +3159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1054175231}
   - component: {fileID: 1054175230}
+  - component: {fileID: 1054175232}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3181,8 +3182,8 @@ MonoBehaviour:
   playerPrefab: {fileID: 7697479598873518444, guid: b9a873044d1e44c3e8a5815ca0ebc83c, type: 3}
   enemyPrefab: {fileID: 7910198505039258046, guid: 17dc995d447a7426d8d7dc9e980c9367, type: 3}
   spawnLocation: {fileID: 51945493}
-  numberOfEnemies: 5
-  waveDuration: 100
+  waveDuration: 60
+  waveIndex: 0
   spawnedEnemies: []
 --- !u!4 &1054175231
 Transform:
@@ -3199,6 +3200,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1054175232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054175229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d34a1f71052e40fc9737c7e698be2ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyCount: 4
+  bestFitness: 0
+  mutationRate: 0.05
+  bestDNA: []
 --- !u!1 &1113402316
 GameObject:
   m_ObjectHideFlags: 0

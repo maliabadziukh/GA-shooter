@@ -6,24 +6,23 @@ public class GameController : MonoBehaviour
 {
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
-
     public Transform spawnLocation;
-    public int numberOfEnemies = 5;
     public int waveDuration = 100;
     private float waveTimer;
+    public int waveIndex = 0;
     private float spawnInterval;
     private float spawnTimer;
     public List<List<float>> enemiesToSpawn = new();
     public List<GameObject> spawnedEnemies = new();
+    private EvolutionManager evolutionManager;
 
 
     void Start()
     {
-        StartNewWave();
+        evolutionManager = GetComponent<EvolutionManager>();
         GameObject playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         Player player = playerObj.GetComponent<Player>();
-        player.SetInitialStats(NormalizeStats(new() { 100, 100, 100, 100, 100 }));
-
+        player.SetInitialStats(evolutionManager.NormalizeDNA(new() { 100, 100, 100, 100, 100 }));
     }
     void FixedUpdate()
     {
@@ -47,52 +46,25 @@ public class GameController : MonoBehaviour
             spawnTimer -= Time.fixedDeltaTime;
             waveTimer -= Time.fixedDeltaTime;
         }
+
+
         if (waveTimer <= 0 && spawnedEnemies.Count <= 0)
         {
-            StartNewWave();
+            enemiesToSpawn.Clear();
+            waveIndex++;
+            print("Starting wave " + waveIndex);
+            StartWave();
         }
 
     }
-    public void StartNewWave()
+    public void StartWave()
     {
-
-        GenerateRandomEnemies();
+        enemiesToSpawn = evolutionManager.CreateGeneration();
         spawnInterval = waveDuration / enemiesToSpawn.Count;
         waveTimer = waveDuration;
-
     }
 
-    public void GenerateRandomEnemies()
-    {
-
-        List<List<float>> generatedEnemies = new();
-        while (generatedEnemies.Count < numberOfEnemies)
-        {
-            List<float> newEnemy = NormalizeStats(new() { Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100) });
-            generatedEnemies.Add(newEnemy);
-        }
-
-        enemiesToSpawn.Clear();
-        enemiesToSpawn = generatedEnemies;
-
-    }
-
-    public List<float> NormalizeStats(List<float> rawStats)
-    {
-        float sum = 0;
-        List<float> normalizedStats = new();
-
-        foreach (float stat in rawStats)
-        {
-            sum += stat;
-        }
-        foreach (float stat in rawStats)
-        {
-            normalizedStats.Add(stat / sum);
-        }
-        return normalizedStats;
 
 
 
-    }
 }
