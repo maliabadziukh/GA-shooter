@@ -18,16 +18,21 @@ public class Player : Character
         base.Start();
     }
 
-    protected override void Update()
+    private void Update()
     {
 
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        base.Update();
+        if (currentHealth < 0)
+        {
+            print("Game over");
+            Destroy(gameObject);
 
+        }
     }
 
     void FixedUpdate()
     {
+        moveInput.Normalize();
         MoveInDirection(moveInput);
         RotateToTarget(GetMousePos());
     }
@@ -37,6 +42,8 @@ public class Player : Character
         target = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         return target;
     }
+
+
 
 
 }

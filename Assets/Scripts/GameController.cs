@@ -7,41 +7,38 @@ public class GameController : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
     public Transform spawnLocation;
-    public int numberOfEnemies = 5;
-    public int waveDuration = 30;
+    public int waveDuration = 100;
     private float waveTimer;
+    public int waveIndex = 0;
     private float spawnInterval;
     private float spawnTimer;
     public List<List<float>> enemiesToSpawn = new();
     public List<GameObject> spawnedEnemies = new();
+    private EvolutionManager evolutionManager;
 
 
     void Start()
     {
-        print("START");
-        StartNewWave();
+        evolutionManager = GetComponent<EvolutionManager>();
         GameObject playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         Player player = playerObj.GetComponent<Player>();
-        player.SetInitialStats(new() { 100, 5, 1, 3 });
+        player.SetInitialStats(evolutionManager.NormalizeDNA(new() { 100, 100, 100, 100, 100 }));
     }
     void FixedUpdate()
     {
-        print("FIXED UPDATE STARTING");
-
         if (spawnTimer <= 0)
         {
-            //spawn an enemy
             if (enemiesToSpawn.Count > 0)
             {
                 GameObject enemy = Instantiate(enemyPrefab, spawnLocation.position, Quaternion.identity);
                 enemy.GetComponent<Enemy>().SetInitialStats(enemiesToSpawn[0]);
-                enemiesToSpawn.RemoveAt(0); // and remove it
+                enemiesToSpawn.RemoveAt(0);
                 spawnedEnemies.Add(enemy);
                 spawnTimer = spawnInterval;
             }
             else
             {
-                waveTimer = 0; // if no enemies remain, end wave
+                waveTimer = 0;
             }
         }
         else
@@ -49,38 +46,25 @@ public class GameController : MonoBehaviour
             spawnTimer -= Time.fixedDeltaTime;
             waveTimer -= Time.fixedDeltaTime;
         }
+
+
         if (waveTimer <= 0 && spawnedEnemies.Count <= 0)
         {
-            StartNewWave();
+            enemiesToSpawn.Clear();
+            waveIndex++;
+            print("Starting wave " + waveIndex);
+            StartWave();
         }
-        print("FIXED UPDATE RAN");
 
     }
-    public void StartNewWave()
+    public void StartWave()
     {
-        print("START NEW WAVE");
-
-        GenerateRandomEnemies();
+        enemiesToSpawn = evolutionManager.CreateGeneration();
         spawnInterval = waveDuration / enemiesToSpawn.Count;
         waveTimer = waveDuration;
-        print("NEW WAVE STARTED");
-
     }
 
-    public void GenerateRandomEnemies()
-    {
-        print("GENERATE RANDOM ENEMIES");
 
-        List<List<float>> generatedEnemies = new();
-        while (generatedEnemies.Count < numberOfEnemies)
-        {
-            List<float> newEnemy = new() { Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100) };
-            generatedEnemies.Add(newEnemy);
-        }
 
-        enemiesToSpawn.Clear();
-        enemiesToSpawn = generatedEnemies;
-        print("RANDOM ENEMIES GENERATED");
 
-    }
 }
