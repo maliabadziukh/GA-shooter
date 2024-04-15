@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using UnityEngine;
 
 public class EvolutionManager : MonoBehaviour
@@ -11,11 +8,15 @@ public class EvolutionManager : MonoBehaviour
     public float mutationRate = 0.05f;
     public List<float> bestDNA = new();
     public List<List<float>> previousGeneration = new();
+    private DataWriter dataWriter;
+    private GameController gameController;
 
     private System.Random random;
     private void Start()
     {
         random = new System.Random();
+        dataWriter = gameObject.GetComponent<DataWriter>();
+        gameController = GetComponent<GameController>();
     }
     public List<List<float>> CreateGeneration()
     {
@@ -48,11 +49,14 @@ public class EvolutionManager : MonoBehaviour
 
         previousGeneration = new List<List<float>>(newGeneration);
 
-        print("generation " + GetComponent<GameController>().waveIndex);
+        print("generation " + gameController.waveIndex);
+        dataWriter.WriteRow(gameController.waveIndex, AverageDNA(newGeneration));
+        print("Generation number:" + gameController.waveIndex);
         foreach (List<float> DNA in newGeneration)
         {
             PrintDNA(DNA);
         }
+
         return newGeneration;
     }
 
@@ -141,6 +145,27 @@ public class EvolutionManager : MonoBehaviour
             normalizedDNA.Add(stat / sum);
         }
         return normalizedDNA;
+    }
+
+    private List<float> AverageDNA(List<List<float>> generation)
+    {
+        List<float> averageDNA = new();
+        int statCount = generation[0].Count;
+
+        //iterate through each stat 
+        for (int i = 0; i < statCount; i++)
+        {
+            float sum = 0f;
+            //add value from each specimen
+            foreach (List<float> DNA in generation)
+            {
+                sum += DNA[i];
+            }
+            //divide by total N specimens
+            float averageGene = sum / generation.Count;
+            averageDNA.Add(averageGene);
+        }
+        return averageDNA;
     }
 
     public void PrintDNA(List<float> DNA)
