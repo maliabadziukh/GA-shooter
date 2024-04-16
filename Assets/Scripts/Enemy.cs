@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Unity.VisualScripting;
@@ -8,20 +9,22 @@ using UnityEngine;
 public class Enemy : Character
 {
 
-    Transform playerTransform;
-    GameController gameController;
+    Transform towerTransform;
     EvolutionManager evolutionManager;
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    private float timeSurvived;
+    private float initializationTime;
+
+
+
 
     protected override void Start()
     {
         base.Start();
-        playerTransform = FindObjectOfType<Player>().GameObject().transform;
-        gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        towerTransform = FindObjectOfType<Tower>().GameObject().transform;
+
         evolutionManager = GameObject.Find("GameController").GetComponent<EvolutionManager>();
+        initializationTime = Time.timeSinceLevelLoad;
+        StartCoroutine(Shoot());
     }
 
     private void Update()
@@ -36,11 +39,25 @@ public class Enemy : Character
     void FixedUpdate()
     {
         rotationVector.Normalize();
-        RotateToTarget(playerTransform.position);
-        if (Vector2.Distance(transform.position, playerTransform.position) > 2)
+        RotateToTarget(towerTransform.position);
+        if (Vector2.Distance(transform.position, towerTransform.position) > 2)
         {
             MoveInDirection(rotationVector);
         }
+    }
+    public void MoveInDirection(Vector2 direction)
+    {
+        rbBody.MovePosition((Vector2)transform.position + (direction * speed * Time.deltaTime));
+    }
+
+    public IEnumerator Shoot()
+    {
+        yield return new WaitForSeconds(reloadTime);
+        GameObject bullet = Instantiate(bulletPrefab, gunTransform.position, gunTransform.rotation);
+        bullet.GetComponent<Bullet>().damage = damage;
+        bullet.GetComponent<Rigidbody2D>().AddForce(gunTransform.up * bulletSpeed, ForceMode2D.Impulse);
+        StartCoroutine(Shoot());
+
     }
 
     public void Die()

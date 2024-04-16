@@ -1,9 +1,6 @@
 
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 public class Character : MonoBehaviour
 {
     public float health;
@@ -18,26 +15,19 @@ public class Character : MonoBehaviour
     protected Vector3 rotationVector;
     protected float rotationZ;
     public float currentHealth;
-    protected float initializationTime;
-    protected float timeSurvived;
     public List<float> DNA = new();
+    protected GameController gameController;
 
 
 
-    protected virtual void Awake()
+
+    protected virtual void Start()
     {
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
         tank = transform.Find("Tank").gameObject;
         rbBody = GetComponent<Rigidbody2D>();
         gunTransform = tank.transform.Find("Gun");
     }
-
-    protected virtual void Start()
-    {
-        StartCoroutine(ShootTarget());
-        initializationTime = Time.timeSinceLevelLoad;
-    }
-
-
     public void SetInitialStats(List<float> stats)
     {
         if (gameObject.CompareTag("Enemy"))
@@ -48,16 +38,16 @@ public class Character : MonoBehaviour
             this.damage = stats[1] * 50;
             this.speed = (float)(stats[2] * 1.5);
             this.bulletSpeed = stats[3] * 5;
-            this.reloadTime = (float)((1 - stats[4]) * 2.5);
+            this.reloadTime = (float)((1 - stats[4]) * 4);
             this.currentHealth = this.health;
         }
         else
         {
             this.health = stats[0] * 500;
-            this.damage = stats[1] * 100;
-            this.speed = stats[2] * 3;
+            this.damage = stats[1] * 150;
+            this.speed = (1 - stats[2]) * 3;
             this.bulletSpeed = stats[3] * 10;
-            this.reloadTime = (1 - stats[4]) * 5;
+            this.reloadTime = (1 - stats[4]) * 2;
             this.currentHealth = this.health;
         }
 
@@ -69,23 +59,10 @@ public class Character : MonoBehaviour
         tank.transform.rotation = Quaternion.Euler(0, 0, rotationZ - 90);
     }
 
-    public void MoveInDirection(Vector2 direction)
-    {
-        rbBody.MovePosition((Vector2)transform.position + (direction * speed * Time.deltaTime));
-    }
+
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-    }
-
-    public IEnumerator ShootTarget()
-    {
-        yield return new WaitForSeconds(reloadTime);
-        GameObject bullet = Instantiate(bulletPrefab, gunTransform.position, gunTransform.rotation);
-        bullet.GetComponent<Bullet>().damage = damage;
-        bullet.GetComponent<Rigidbody2D>().AddForce(gunTransform.up * bulletSpeed, ForceMode2D.Impulse);
-        StartCoroutine(ShootTarget());
-
     }
 
 
