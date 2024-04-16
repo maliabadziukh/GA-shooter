@@ -6,6 +6,7 @@ public class EvolutionManager : MonoBehaviour
     public int enemyCount = 5;
     public float bestFitness = 0;
     public float mutationRate = 0.05f;
+    public float mutationAmount = 0.1f;
     public List<float> bestDNA = new();
     public List<List<float>> previousGeneration = new();
     private DataWriter dataWriter;
@@ -21,6 +22,7 @@ public class EvolutionManager : MonoBehaviour
     public List<List<float>> CreateGeneration()
     {
         List<List<float>> newGeneration = new();
+
         if (previousGeneration.Count == 0)
         {
             print("making a random generation");
@@ -76,7 +78,8 @@ public class EvolutionManager : MonoBehaviour
 
     public List<float> Mutate(List<float> DNA)
     {
-        print("(EM) Mutate");
+        print("(EM) Mutate from:");
+        PrintDNA(DNA);
 
         List<float> mutatedDNA = DNA;
 
@@ -84,19 +87,11 @@ public class EvolutionManager : MonoBehaviour
         {
             if (random.NextDouble() < mutationRate)
             {
-                //swaps some genes around
-                if (i == DNA.Count - 1)
-                {
-                    mutatedDNA[i] = DNA[0];
-                    mutatedDNA[0] = DNA[i];
-                }
-                else
-                {
-                    mutatedDNA[i] = DNA[i + 1];
-                    mutatedDNA[i + 1] = DNA[i];
-                }
+                mutatedDNA[i] += Random.Range(-mutationAmount, mutationAmount);
             }
         }
+        print("to:");
+        PrintDNA(mutatedDNA);
 
         return NormalizeDNA(mutatedDNA);
 
