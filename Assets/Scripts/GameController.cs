@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject playerPrefab;
+    public GameObject towerPrefab;
     public GameObject enemyPrefab;
+    public List<Transform> spawnOptions;
     public Transform spawnLocation;
     public int waveDuration = 100;
     private float waveTimer;
@@ -20,9 +22,9 @@ public class GameController : MonoBehaviour
     void Start()
     {
         evolutionManager = GetComponent<EvolutionManager>();
-        GameObject playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-        Player player = playerObj.GetComponent<Player>();
-        player.SetInitialStats(evolutionManager.NormalizeDNA(new() { 100, 100, 100, 100, 100 }));
+        GameObject towerObj = Instantiate(towerPrefab, Vector3.zero, Quaternion.identity);
+        Tower tower = towerObj.GetComponent<Tower>();
+        tower.SetInitialStats(evolutionManager.NormalizeDNA(new() { 100, 100, 100, 100, 100 }));
     }
     void FixedUpdate()
     {
@@ -30,6 +32,7 @@ public class GameController : MonoBehaviour
         {
             if (enemiesToSpawn.Count > 0)
             {
+                spawnLocation = spawnOptions[Random.Range(0, spawnOptions.Count)];
                 GameObject enemy = Instantiate(enemyPrefab, spawnLocation.position, Quaternion.identity);
                 enemy.GetComponent<Enemy>().SetInitialStats(enemiesToSpawn[0]);
                 enemiesToSpawn.RemoveAt(0);

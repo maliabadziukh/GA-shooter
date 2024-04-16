@@ -17,7 +17,7 @@ public class HealthBar : MonoBehaviour
         character = transform.parent.gameObject.GetComponent<Enemy>();
         if (character == null)
         {
-            character = transform.parent.gameObject.GetComponent<Player>();
+            character = transform.parent.gameObject.GetComponent<Tower>();
         }
         initialHealth = character.health;
 
