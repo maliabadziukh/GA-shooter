@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class Character : MonoBehaviour
@@ -27,6 +28,7 @@ public class Character : MonoBehaviour
         tank = transform.Find("Tank").gameObject;
         rbBody = GetComponent<Rigidbody2D>();
         gunTransform = tank.transform.Find("Gun");
+        StartCoroutine(Shoot());
     }
     public void SetInitialStats(List<float> stats)
     {
@@ -58,7 +60,15 @@ public class Character : MonoBehaviour
         rotationZ = Mathf.Atan2(rotationVector.y, rotationVector.x) * Mathf.Rad2Deg;
         tank.transform.rotation = Quaternion.Euler(0, 0, rotationZ - 90);
     }
+    public IEnumerator Shoot()
+    {
+        yield return new WaitForSeconds(reloadTime);
+        GameObject bullet = Instantiate(bulletPrefab, gunTransform.position, gunTransform.rotation);
+        bullet.GetComponent<Bullet>().damage = damage;
+        bullet.GetComponent<Rigidbody2D>().AddForce(gunTransform.up * bulletSpeed, ForceMode2D.Impulse);
+        StartCoroutine(Shoot());
 
+    }
 
     public void TakeDamage(float damage)
     {
