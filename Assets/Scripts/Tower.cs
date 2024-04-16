@@ -11,8 +11,6 @@ public class Tower : Character
     {
         base.Start();
         StartCoroutine(Rotate());
-        StartCoroutine(Shoot());
-
     }
 
 

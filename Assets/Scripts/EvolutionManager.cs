@@ -21,8 +21,6 @@ public class EvolutionManager : MonoBehaviour
     public List<List<float>> CreateGeneration()
     {
         List<List<float>> newGeneration = new();
-        print("(EM) previous generation.Count == " + previousGeneration.Count);
-        //make the new generation random if it's the first one
         if (previousGeneration.Count == 0)
         {
             print("making a random generation");
@@ -47,15 +45,8 @@ public class EvolutionManager : MonoBehaviour
 
         }
 
-        previousGeneration = new List<List<float>>(newGeneration);
-
-        print("generation " + gameController.waveIndex);
+        previousGeneration = new(newGeneration);
         dataWriter.WriteRow(gameController.waveIndex, AverageDNA(newGeneration));
-        print("Generation number:" + gameController.waveIndex);
-        foreach (List<float> DNA in newGeneration)
-        {
-            PrintDNA(DNA);
-        }
 
         return newGeneration;
     }
@@ -80,7 +71,7 @@ public class EvolutionManager : MonoBehaviour
                 childDNA.Add(secondParentDNA[i]);
             }
         }
-        return childDNA;
+        return NormalizeDNA(childDNA);
     }
 
     public List<float> Mutate(List<float> DNA)
@@ -107,7 +98,7 @@ public class EvolutionManager : MonoBehaviour
             }
         }
 
-        return mutatedDNA;
+        return NormalizeDNA(mutatedDNA);
 
     }
 

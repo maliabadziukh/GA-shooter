@@ -25,6 +25,9 @@ public class GameController : MonoBehaviour
         GameObject towerObj = Instantiate(towerPrefab, Vector3.zero, Quaternion.identity);
         Tower tower = towerObj.GetComponent<Tower>();
         tower.SetInitialStats(evolutionManager.NormalizeDNA(new() { 100, 100, 100, 100, 100 }));
+
+        print("Tower DNA is:");
+        evolutionManager.PrintDNA(tower.DNA);
     }
     void FixedUpdate()
     {
