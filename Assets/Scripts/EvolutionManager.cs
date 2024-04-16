@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class EvolutionManager : MonoBehaviour
@@ -8,7 +9,7 @@ public class EvolutionManager : MonoBehaviour
     public float mutationRate = 0.05f;
     public float mutationAmount = 0.1f;
     public List<float> bestDNA = new();
-    public List<List<float>> previousGeneration = new();
+    public List<Specimen> previousGeneration = new();
     private DataWriter dataWriter;
     private GameController gameController;
 
@@ -34,7 +35,7 @@ public class EvolutionManager : MonoBehaviour
         else
         {
             print("adding best specimen");
-            newGeneration.Add(Mutate(bestDNA));
+            newGeneration.Add(new(BestSpecimen().DNA));
             PrintDNA(newGeneration[0]);
 
             print("adding children");
@@ -46,10 +47,9 @@ public class EvolutionManager : MonoBehaviour
             }
 
         }
-
-        previousGeneration = new(newGeneration);
         dataWriter.WriteRow(gameController.waveIndex, AverageDNA(newGeneration));
 
+        previousGeneration.Clear();
         return newGeneration;
     }
 
@@ -58,8 +58,8 @@ public class EvolutionManager : MonoBehaviour
         print("Make child from crossover");
 
         List<float> childDNA = new();
-        List<float> firstParentDNA = previousGeneration[Random.Range(0, previousGeneration.Count)];
-        List<float> secondParentDNA = previousGeneration[Random.Range(0, previousGeneration.Count)];
+        List<float> firstParentDNA = RouletteWheelParentSelect();
+        List<float> secondParentDNA = RouletteWheelParentSelect();
         int midPoint = Random.Range(0, firstParentDNA.Count);
 
         for (int i = 0; i < firstParentDNA.Count; i++)
@@ -76,6 +76,35 @@ public class EvolutionManager : MonoBehaviour
         return NormalizeDNA(childDNA);
     }
 
+    private List<float> RouletteWheelParentSelect()
+    {
+        print("Selecting parent with roulette...");
+        float fitnessSum = 0f;
+        foreach (Specimen specimen in previousGeneration)
+        {
+            fitnessSum += specimen.Fitness;
+        }
+        print("Total fitness: " + fitnessSum);
+
+        float wheelPointer = Random.Range(0, fitnessSum);
+        print("Wheel pointer: " + wheelPointer);
+
+        float partialSum = 0;
+        foreach (Specimen specimen in previousGeneration)
+        {
+            partialSum += specimen.Fitness;
+            print("added fitness: " + specimen.Fitness + "; partial sum: " + partialSum);
+            if (partialSum >= wheelPointer)
+            {
+                print("Selected parent! DNA:");
+                PrintDNA(specimen.DNA);
+                return new(specimen.DNA);
+            }
+        }
+
+        return new(previousGeneration[previousGeneration.Count - 1].DNA);
+    }
+
     public List<float> Mutate(List<float> DNA)
     {
         print("(EM) Mutate from:");
@@ -90,22 +119,29 @@ public class EvolutionManager : MonoBehaviour
                 mutatedDNA[i] += Random.Range(-mutationAmount, mutationAmount);
             }
         }
+
         print("to:");
         PrintDNA(mutatedDNA);
 
         return NormalizeDNA(mutatedDNA);
-
     }
 
-    public void CheckFitness(float timeSurvived, List<float> DNA)
+    public void LogSpecimen(List<float> DNA, float fitnessScore)
     {
-        print("(EM) Check fitness");
-        if (timeSurvived > bestFitness)
+        previousGeneration.Add(new Specimen(DNA, fitnessScore));
+    }
+    public Specimen BestSpecimen()
+    {
+        Specimen bestSpecimen = new(new(previousGeneration[0].DNA), previousGeneration[0].Fitness);
+
+        foreach (Specimen specimen in previousGeneration)
         {
-            bestFitness = timeSurvived;
-            bestDNA = DNA;
-            print("(EM) New best! " + bestFitness);
+            if (specimen.Fitness > bestSpecimen.Fitness)
+            {
+                bestSpecimen = new(new(specimen.DNA), specimen.Fitness);
+            }
         }
+        return bestSpecimen;
     }
 
     private List<float> GenerateRandomDNA()
@@ -114,6 +150,7 @@ public class EvolutionManager : MonoBehaviour
 
         return NormalizeDNA(new() { Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100), Random.Range(1, 100) });
     }
+
 
     public List<float> NormalizeDNA(List<float> rawDNA)
     {
@@ -162,5 +199,16 @@ public class EvolutionManager : MonoBehaviour
             output += gene + ", ";
         }
         print(output);
+    }
+}
+
+public class Specimen
+{
+    public List<float> DNA;
+    public float Fitness;
+    public Specimen(List<float> dna, float fitness)
+    {
+        DNA = dna;
+        Fitness = fitness;
     }
 }
