@@ -47,7 +47,15 @@ public class EvolutionManager : MonoBehaviour
             }
 
         }
-        dataWriter.WriteRow(gameController.waveIndex, AverageDNA(newGeneration));
+        dataWriter.WriteFloatRow(dataWriter.avgFilePath, AverageDNA(newGeneration));
+
+        dataWriter.WriteString(dataWriter.breakdownFilePath, gameController.waveIndex.ToString());
+        dataWriter.WriteStringRow(dataWriter.breakdownFilePath, dataWriter.dnaHeaders);
+
+        foreach (List<float> dna in newGeneration)
+        {
+            dataWriter.WriteFloatRow(dataWriter.breakdownFilePath, dna);
+        }
 
         previousGeneration.Clear();
         return newGeneration;

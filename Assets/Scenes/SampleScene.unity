@@ -3096,9 +3096,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1054175231}
+  - component: {fileID: 1054175233}
   - component: {fileID: 1054175230}
   - component: {fileID: 1054175232}
-  - component: {fileID: 1054175233}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3119,6 +3119,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 7697479598873518444, guid: b9a873044d1e44c3e8a5815ca0ebc83c, type: 3}
+  towerDNA:
+  - 100
+  - 100
+  - 100
+  - 100
+  - 100
   enemyPrefab: {fileID: 7910198505039258046, guid: 17dc995d447a7426d8d7dc9e980c9367, type: 3}
   spawnOptions:
   - {fileID: 51945493}
@@ -3161,6 +3167,7 @@ MonoBehaviour:
   enemyCount: 5
   bestFitness: 0
   mutationRate: 0.1
+  mutationAmount: 0.1
   bestDNA: []
 --- !u!114 &1054175233
 MonoBehaviour:

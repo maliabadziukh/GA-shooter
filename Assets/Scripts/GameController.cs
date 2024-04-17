@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public GameObject towerPrefab;
+    public List<float> towerDNA = new() { 100, 100, 100, 100, 100 };
     public GameObject enemyPrefab;
     public List<Transform> spawnOptions;
     public Transform spawnLocation;
@@ -21,10 +22,11 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 20;
         evolutionManager = GetComponent<EvolutionManager>();
         GameObject towerObj = Instantiate(towerPrefab, Vector3.zero, Quaternion.identity);
         Tower tower = towerObj.GetComponent<Tower>();
-        tower.SetInitialStats(evolutionManager.NormalizeDNA(new() { 100, 100, 100, 100, 100 }));
+        tower.SetInitialStats(evolutionManager.NormalizeDNA(towerDNA));
 
         print("Tower DNA is:");
         evolutionManager.PrintDNA(tower.DNA);
