@@ -125,6 +125,10 @@ public class EvolutionManager : MonoBehaviour
             if (random.NextDouble() < mutationRate)
             {
                 mutatedDNA[i] += Random.Range(-mutationAmount, mutationAmount);
+                if (mutatedDNA[i] < 0)
+                {
+                    mutatedDNA[i] = 0;
+                }
             }
         }
 
