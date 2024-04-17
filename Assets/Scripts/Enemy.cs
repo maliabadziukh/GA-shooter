@@ -13,6 +13,7 @@ public class Enemy : Character
     EvolutionManager evolutionManager;
     private float timeSurvived;
     private float initializationTime;
+    private float fitnessScore;
 
     protected override void Start()
     {
@@ -44,15 +45,19 @@ public class Enemy : Character
         rbBody.MovePosition((Vector2)transform.position + (direction * speed * Time.deltaTime));
     }
 
-    public void Die()
+    private void Die()
     {
         print("oh no i'm dead");
+        //reset health so Die() doesn't get called multiple times
         currentHealth = 1000;
-        //remove from currently spawned for correct wave management
         gameController.spawnedEnemies.Remove(gameObject);
-        // check if specimen DNA should be added to best specimen in evolution manager for later respwaning
-        timeSurvived = Time.timeSinceLevelLoad - initializationTime;
-        evolutionManager.CheckFitness(timeSurvived, DNA);
+        evolutionManager.LogSpecimen(DNA, Fitness());
         Destroy(gameObject);
+    }
+
+    private float Fitness()
+    {
+        timeSurvived = Time.timeSinceLevelLoad - initializationTime;
+        return timeSurvived;
     }
 }
