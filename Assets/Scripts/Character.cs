@@ -64,7 +64,7 @@ public class Character : MonoBehaviour
     {
         yield return new WaitForSeconds(reloadTime);
         GameObject bullet = Instantiate(bulletPrefab, gunTransform.position, gunTransform.rotation);
-        bullet.transform.SetParent(transform, false);
+        bullet.transform.SetParent(transform, true);
         bullet.GetComponent<Bullet>().damage = damage;
         bullet.GetComponent<Rigidbody2D>().AddForce(gunTransform.up * bulletSpeed, ForceMode2D.Impulse);
         StartCoroutine(Shoot());
