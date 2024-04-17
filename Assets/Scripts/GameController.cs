@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public float simulationSpeed = 1;
     public GameObject towerPrefab;
     public List<float> towerDNA = new() { 100, 100, 100, 100, 100 };
     public GameObject enemyPrefab;
@@ -22,7 +23,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = 20;
+        Time.timeScale = simulationSpeed;
         evolutionManager = GetComponent<EvolutionManager>();
         GameObject towerObj = Instantiate(towerPrefab, Vector3.zero, Quaternion.identity);
         Tower tower = towerObj.GetComponent<Tower>();
