@@ -13,6 +13,10 @@ public class Enemy : Character
     EvolutionManager evolutionManager;
     private float timeSurvived;
     private float initializationTime;
+    public float damageToSelf = 0;
+    public float damageToOthers = 0;
+    public float damageToTower = 0;
+
     private float fitnessScore;
 
     protected override void Start()

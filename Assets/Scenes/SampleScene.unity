@@ -3118,6 +3118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3859b1359b854d46ba0fd13a70df531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  simulationSpeed: 0.2
   towerPrefab: {fileID: 7697479598873518444, guid: b9a873044d1e44c3e8a5815ca0ebc83c, type: 3}
   towerDNA:
   - 100
@@ -3181,13 +3182,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 160426c3ff0fe4eeea044514a2a1041e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  headers:
-  - Generation N
+  dnaHeaders:
   - health
   - damage
   - speed
   - bullet speed
   - reload speed
+  startingParamHeaders:
+  - Wave duration
+  - Enemy N
+  - Mutation rate
+  - Mutation Amount
+  avgFilePath: 
+  breakdownFilePath: 
 --- !u!1 &1113402316
 GameObject:
   m_ObjectHideFlags: 0
