@@ -35,7 +35,7 @@ public class EvolutionManager : MonoBehaviour
         else
         {
             print("adding best specimen");
-            newGeneration.Add(new(BestSpecimen().DNA));
+            newGeneration.Add(Mutate(new(BestSpecimen().DNA)));
             PrintDNA(newGeneration[0]);
 
             print("adding children");
